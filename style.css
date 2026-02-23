@@ -189,6 +189,11 @@ h1 {
     opacity: 0.9;
 }
 
+.comments-section {
+    margin-top: 2rem;
+    text-align: left;
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 1.5rem 2rem;
