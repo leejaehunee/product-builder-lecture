@@ -1,26 +1,26 @@
 :root {
-    --primary-color: #333333; /* Dark gray for text */
-    --secondary-color: #6c757d; /* Muted gray for subtitles */
-    --background-color: #f8f9fa; /* Light cool gray background */
-    --text-color: #333333;
+    --primary-color: #333333;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa; /* 연한 쿨그레이 */
+    --text-color: #333333; /* 다크 그레이 */
     --white: #ffffff;
-    --shadow-color: rgba(0, 0, 0, 0.04);
-    --btn-bg: #e9ecef;
-    --accent-blue: #007bff; /* Standard high-readability blue */
+    --shadow-color: rgba(0, 0, 0, 0.06); /* 더 연하고 넓은 그림자용 */
+    --btn-bg: #f1f3f5;
+    --accent-blue: #007bff;
 }
 
 body.dark-mode {
     --background-color: #121212;
     --text-color: #e9ecef;
     --white: #1e1e1e;
-    --shadow-color: rgba(0, 0, 0, 0.2);
+    --shadow-color: rgba(0, 0, 0, 0.3);
     --btn-bg: #2d2d2d;
     --primary-color: #ffffff;
     --accent-blue: #3793ff;
 }
 
 body {
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     display: flex;
@@ -36,17 +36,18 @@ body {
 .container {
     background-color: var(--white);
     padding: 5rem 3.5rem;
-    border-radius: 1.2rem;
-    box-shadow: 0 10px 40px var(--shadow-color);
+    border-radius: 12px; /* 가이드에 따른 12px 적용 */
+    box-shadow: 0 20px 60px var(--shadow-color); /* 아주 연하고 넓게 퍼지는 그림자 */
     text-align: center;
     max-width: 90%;
     width: 500px;
     position: relative;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 h1 {
     font-size: 3.2rem;
-    font-weight: 800; /* Extra bold for clear hierarchy */
+    font-weight: 800;
     color: var(--text-color);
     margin-bottom: 0.8rem;
     letter-spacing: -0.03em;
@@ -82,23 +83,28 @@ h1 {
 }
 
 #generate-btn {
-    background-color: var(--text-color); /* Minimalist button */
+    background-color: var(--text-color);
     color: var(--white);
     border: none;
     padding: 1.1rem 2.8rem;
-    border-radius: 0.8rem;
+    border-radius: 12px; /* 버튼 모서리 12px */
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.7rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* 부드러운 트랜지션 */
 }
 
 #generate-btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px); /* 살짝 위로 떠오르는 효과 */
+    box-shadow: 0 8px 20px var(--shadow-color);
     opacity: 0.9;
+}
+
+#generate-btn:active {
+    transform: translateY(-1px);
 }
 
 .divider {
@@ -119,7 +125,7 @@ h1 {
 .form-group textarea {
     width: 100%;
     padding: 1.1rem;
-    border-radius: 0.6rem;
+    border-radius: 8px; /* 입력창 모서리 8px */
     border: 1px solid var(--btn-bg);
     background-color: var(--background-color);
     color: var(--text-color);
@@ -133,6 +139,7 @@ h1 {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
 }
 
 .submit-btn {
@@ -141,16 +148,17 @@ h1 {
     color: var(--text-color);
     border: none;
     padding: 1.1rem;
-    border-radius: 0.6rem;
+    border-radius: 8px; /* 버튼 모서리 8px */
     font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease; /* 부드러운 트랜지션 */
 }
 
 .submit-btn:hover {
     background-color: var(--secondary-color);
     color: white;
+    transform: translateY(-2px); /* 부드럽게 위로 떠오름 */
 }
 
 #theme-toggle {
@@ -168,6 +176,16 @@ h1 {
     align-items: center;
     cursor: pointer;
     z-index: 10;
+    transition: all 0.2s ease;
+}
+
+#theme-toggle:hover {
+    transform: rotate(15deg) scale(1.1);
+}
+
+.comments-section {
+    margin-top: 2rem;
+    text-align: left;
 }
 
 @media (max-width: 480px) {
