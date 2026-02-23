@@ -1,11 +1,20 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generate-btn');
-    const numbersDisplay = document.querySelector('.numbers-display');
+    const menuDisplay = document.querySelector('.menu-display');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const moonIcon = document.getElementById('moon-icon');
     const sunIcon = document.getElementById('sun-icon');
+
+    // Menus
+    const menus = [
+        '김치찌개', '된장찌개', '제육볶음', '돈가스', '초밥', 
+        '치킨', '피자', '마라탕', '떡볶이', '쌀국수', 
+        '파스타', '삼겹살', '비빔밥', '냉면', '짜장면', 
+        '짬뽕', '햄버거', '샌드위치', '족발', '보쌈',
+        '육회비빔밥', '스테이크', '라멘', '우동', '순대국밥'
+    ];
 
     // Theme Logic
     const currentTheme = localStorage.getItem('theme');
@@ -30,42 +39,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const getNumberColor = (number) => {
-        if (number <= 10) return '#fbc400'; // Yellow
-        if (number <= 20) return '#69c8f2'; // Blue
-        if (number <= 30) return '#ff7272'; // Red
-        if (number <= 40) return '#aaa';    // Gray
-        return '#b0d840';                   // Green
+    const getRandomMenu = () => {
+        const randomIndex = Math.floor(Math.random() * menus.length);
+        return menus[randomIndex];
     };
 
-    const generateLottoNumbers = () => {
-        const numbers = new Set();
-        while (numbers.size < 6) {
-            const randomNumber = Math.floor(Math.random() * 45) + 1;
-            numbers.add(randomNumber);
-        }
-        return Array.from(numbers).sort((a, b) => a - b);
-    };
-
-    const displayNumbers = (numbers) => {
-        numbersDisplay.innerHTML = '';
-        numbers.forEach((number, index) => {
-            setTimeout(() => {
-                const circle = document.createElement('div');
-                circle.classList.add('number-circle');
-                circle.textContent = number;
-                circle.style.backgroundColor = getNumberColor(number);
-                circle.style.transform = 'scale(0)';
-                numbersDisplay.appendChild(circle);
-                setTimeout(() => {
-                    circle.style.transform = 'scale(1)';
-                }, 50);
-            }, index * 100);
-        });
+    const displayMenu = (menu) => {
+        menuDisplay.innerHTML = '';
+        const menuItem = document.createElement('div');
+        menuItem.classList.add('menu-item');
+        menuItem.textContent = menu;
+        menuDisplay.appendChild(menuItem);
     };
 
     generateBtn.addEventListener('click', () => {
-        const lottoNumbers = generateLottoNumbers();
-        displayNumbers(lottoNumbers);
+        // Animation effect
+        menuDisplay.innerHTML = '<div class="menu-item" style="opacity: 0.5;">음... 고민 중...</div>';
+        
+        setTimeout(() => {
+            const recommendedMenu = getRandomMenu();
+            displayMenu(recommendedMenu);
+        }, 500);
     });
 });
