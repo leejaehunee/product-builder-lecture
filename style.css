@@ -305,6 +305,37 @@ h1 {
 
 .divider { border: none; border-top: 1px solid var(--progress-bg); margin: 4rem 0; }
 
+/* Standalone Page Styles */
+.policy-page, .about-page {
+    text-align: left;
+}
+
+.policy-page h1, .about-page h1 {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.policy-content h3, .about-content h3 {
+    font-size: 1.3rem;
+    margin-top: 2rem;
+    color: var(--text-color);
+}
+
+.policy-content p, .about-content p {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.about-content ul {
+    color: var(--secondary-color);
+    padding-left: 1.2rem;
+}
+
+.about-content li {
+    margin-bottom: 0.5rem;
+}
+
 @media (max-width: 600px) {
     .info-grid { grid-template-columns: 1fr; }
     .nav-links { display: none; }
