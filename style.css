@@ -1,12 +1,13 @@
 :root {
     --primary-color: #333333;
     --secondary-color: #6c757d;
-    --background-color: #f8f9fa; /* 연한 쿨그레이 */
-    --text-color: #333333; /* 다크 그레이 */
+    --background-color: #f8f9fa;
+    --text-color: #333333;
     --white: #ffffff;
-    --shadow-color: rgba(0, 0, 0, 0.06); /* 더 연하고 넓은 그림자용 */
+    --shadow-color: rgba(0, 0, 0, 0.06);
     --btn-bg: #f1f3f5;
     --accent-blue: #007bff;
+    --progress-bg: #e9ecef;
 }
 
 body.dark-mode {
@@ -17,6 +18,7 @@ body.dark-mode {
     --btn-bg: #2d2d2d;
     --primary-color: #ffffff;
     --accent-blue: #3793ff;
+    --progress-bg: #2d2d2d;
 }
 
 body {
@@ -35,111 +37,145 @@ body {
 
 .container {
     background-color: var(--white);
-    padding: 5rem 3.5rem;
-    border-radius: 12px; /* 가이드에 따른 12px 적용 */
-    box-shadow: 0 20px 60px var(--shadow-color); /* 아주 연하고 넓게 퍼지는 그림자 */
+    padding: 4rem 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px var(--shadow-color);
     text-align: center;
     max-width: 90%;
     width: 500px;
     position: relative;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    margin: 2rem 0;
 }
 
 h1 {
-    font-size: 3.2rem;
+    font-size: 2.8rem;
     font-weight: 800;
     color: var(--text-color);
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
     letter-spacing: -0.03em;
-    line-height: 1.2;
 }
 
 .subtitle {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     color: var(--secondary-color);
-    margin-bottom: 3.5rem;
+    margin-bottom: 3rem;
     font-weight: 400;
-    letter-spacing: -0.01em;
 }
 
-.menu-display {
-    margin-bottom: 3.5rem;
-    min-height: 110px;
+/* Upload Section */
+#image-container {
+    width: 100%;
+    height: 300px;
+    background-color: var(--background-color);
+    border-radius: 15px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    border: 2px dashed var(--progress-bg);
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
 }
 
-.menu-item {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: var(--text-color);
-    animation: fadeIn 0.6s ease-out;
+#image-container:hover {
+    border-color: var(--accent-blue);
 }
 
-@keyframes fadeIn {
-    0% { transform: translateY(8px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+#face-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-#generate-btn {
+#upload-label {
+    text-align: center;
+    color: var(--secondary-color);
+}
+
+#upload-label svg {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.main-btn {
     background-color: var(--text-color);
     color: var(--white);
     border: none;
     padding: 1.1rem 2.8rem;
-    border-radius: 12px; /* 버튼 모서리 12px */
+    border-radius: 12px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.7rem;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* 부드러운 트랜지션 */
+    width: 100%;
+    transition: all 0.2s ease;
 }
 
-#generate-btn:hover {
-    transform: translateY(-3px); /* 살짝 위로 떠오르는 효과 */
-    box-shadow: 0 8px 20px var(--shadow-color);
+.main-btn:hover {
+    transform: translateY(-2px);
     opacity: 0.9;
 }
 
-#generate-btn:active {
-    transform: translateY(-1px);
+/* Result Section */
+#result-section {
+    margin-top: 3rem;
+    text-align: left;
 }
 
+.result-bar-wrapper {
+    margin-bottom: 1.2rem;
+}
+
+.label-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 12px;
+    background-color: var(--progress-bg);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--accent-blue);
+    border-radius: 6px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Others */
 .divider {
     border: none;
-    border-top: 1px solid var(--btn-bg);
-    margin: 4.5rem 0;
+    border-top: 1px solid var(--progress-bg);
+    margin: 4rem 0;
 }
 
 .contact-section h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    color: var(--text-color);
-    margin-bottom: 2.5rem;
-    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 .form-group input, 
 .form-group textarea {
     width: 100%;
     padding: 1.1rem;
-    border-radius: 8px; /* 입력창 모서리 8px */
-    border: 1px solid var(--btn-bg);
+    border-radius: 10px;
+    border: 1px solid var(--progress-bg);
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: inherit;
-    font-size: 1rem;
-    transition: all 0.2s ease;
     box-sizing: border-box;
-}
-
-.form-group input:focus, 
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+    margin-bottom: 1rem;
 }
 
 .submit-btn {
@@ -147,18 +183,10 @@ h1 {
     background-color: var(--btn-bg);
     color: var(--text-color);
     border: none;
-    padding: 1.1rem;
-    border-radius: 8px; /* 버튼 모서리 8px */
-    font-size: 1.05rem;
+    padding: 1rem;
+    border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease; /* 부드러운 트랜지션 */
-}
-
-.submit-btn:hover {
-    background-color: var(--secondary-color);
-    color: white;
-    transform: translateY(-2px); /* 부드럽게 위로 떠오름 */
 }
 
 #theme-toggle {
@@ -166,7 +194,6 @@ h1 {
     top: 1.5rem;
     right: 1.5rem;
     background-color: var(--btn-bg);
-    color: var(--text-color);
     border: none;
     border-radius: 50%;
     width: 38px;
@@ -175,29 +202,13 @@ h1 {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    z-index: 10;
-    transition: all 0.2s ease;
-}
-
-#theme-toggle:hover {
-    transform: rotate(15deg) scale(1.1);
-}
-
-.comments-section {
-    margin-top: 2rem;
-    text-align: left;
 }
 
 @media (max-width: 480px) {
     .container {
-        padding: 3.5rem 2rem;
+        padding: 3rem 1.5rem;
     }
-
     h1 {
-        font-size: 2.4rem;
-    }
-
-    .menu-item {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
 }
