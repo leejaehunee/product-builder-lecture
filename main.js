@@ -1,52 +1,110 @@
 const URL = "https://teachablemachine.withgoogle.com/models/nToil7dwb/";
 
-let model, labelContainer, maxPredictions;
+let model, webcam, labelContainer, maxPredictions;
+let isWebcamMode = false;
 
-async function init() {
+async function initModel() {
+    if (model) return;
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
-
-    // load the model and metadata
     model = await tmImage.load(modelURL, metadataURL);
     maxPredictions = model.getTotalClasses();
+}
 
-    labelContainer = document.getElementById("label-container");
-    for (let i = 0; i < maxPredictions; i++) {
-        labelContainer.appendChild(document.createElement("div"));
+async function updateResults(prediction) {
+    const resultSection = document.getElementById('result-section');
+    const labelContainer = document.getElementById('label-container');
+    
+    resultSection.style.display = 'block';
+    
+    // Create bars if they don't exist
+    if (labelContainer.innerHTML === '') {
+        prediction.sort((a, b) => b.probability - a.probability).forEach(p => {
+            const barWrapper = document.createElement('div');
+            barWrapper.className = 'result-bar-wrapper';
+            barWrapper.setAttribute('data-class', p.className);
+            barWrapper.innerHTML = `
+                <div class="label-text">
+                    <span>${p.className}</span>
+                    <span class="percent-text">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 0%"></div>
+                </div>
+            `;
+            labelContainer.appendChild(barWrapper);
+        });
     }
+
+    // Update existing bars
+    prediction.forEach(p => {
+        const barWrapper = labelContainer.querySelector(`[data-class="${p.className}"]`);
+        if (barWrapper) {
+            const percent = (p.probability * 100).toFixed(0);
+            barWrapper.querySelector('.percent-text').textContent = percent + '%';
+            barWrapper.querySelector('.progress-bar').style.width = percent + '%';
+        }
+    });
+}
+
+async function loop() {
+    if (!isWebcamMode) return;
+    webcam.update();
+    const prediction = await model.predict(webcam.canvas);
+    await updateResults(prediction);
+    window.requestAnimationFrame(loop);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // UI Elements
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
-    const moonIcon = document.getElementById('moon-icon');
-    const sunIcon = document.getElementById('sun-icon');
+    const uploadModeBtn = document.getElementById('upload-mode-btn');
+    const webcamModeBtn = document.getElementById('webcam-mode-btn');
+    const uploadSection = document.getElementById('upload-section');
+    const webcamSection = document.getElementById('webcam-section');
     const imageUpload = document.getElementById('image-upload');
     const imageContainer = document.getElementById('image-container');
     const faceImage = document.getElementById('face-image');
     const uploadLabel = document.getElementById('upload-label');
     const predictBtn = document.getElementById('predict-btn');
+    const webcamStartBtn = document.getElementById('webcam-start-btn');
     const resultSection = document.getElementById('result-section');
+    const labelContainer = document.getElementById('label-container');
 
     // Theme Logic
     const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark') {
-        body.classList.add('dark-mode');
-        moonIcon.style.display = 'none';
-        sunIcon.style.display = 'block';
-    }
+    if (currentTheme === 'dark') body.classList.add('dark-mode');
 
     themeToggle.addEventListener('click', () => {
         body.classList.toggle('dark-mode');
-        const isDark = body.classList.contains('dark-mode');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        moonIcon.style.display = isDark ? 'none' : 'block';
-        sunIcon.style.display = isDark ? 'block' : 'none';
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
     });
 
-    // Image Upload Logic
-    imageContainer.addEventListener('click', () => imageUpload.click());
+    // Mode Switching
+    uploadModeBtn.addEventListener('click', () => {
+        isWebcamMode = false;
+        uploadModeBtn.classList.add('active');
+        webcamModeBtn.classList.remove('active');
+        uploadSection.style.display = 'block';
+        webcamSection.style.display = 'none';
+        resultSection.style.display = 'none';
+        labelContainer.innerHTML = '';
+        if (webcam) webcam.stop();
+    });
 
+    webcamModeBtn.addEventListener('click', () => {
+        isWebcamMode = true;
+        webcamModeBtn.classList.add('active');
+        uploadModeBtn.classList.remove('active');
+        webcamSection.style.display = 'block';
+        uploadSection.style.display = 'none';
+        resultSection.style.display = 'none';
+        labelContainer.innerHTML = '';
+    });
+
+    // Upload Mode Logic
+    imageContainer.addEventListener('click', () => imageUpload.click());
     imageUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -56,53 +114,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 faceImage.style.display = 'block';
                 uploadLabel.style.display = 'none';
                 resultSection.style.display = 'none';
+                labelContainer.innerHTML = '';
             };
             reader.readAsDataURL(file);
         }
     });
 
-    // Prediction Logic
     predictBtn.addEventListener('click', async () => {
         if (!faceImage.src || faceImage.style.display === 'none') {
             alert('사진을 먼저 업로드해주세요!');
             return;
         }
-
         predictBtn.disabled = true;
         predictBtn.textContent = '분석 중...';
-
-        if (!model) await init();
-
+        await initModel();
         const prediction = await model.predict(faceImage);
-        prediction.sort((a, b) => b.probability - a.probability);
-
-        resultSection.style.display = 'block';
-        labelContainer.innerHTML = '';
-
-        prediction.forEach(p => {
-            const percent = (p.probability * 100).toFixed(0);
-            const barWrapper = document.createElement('div');
-            barWrapper.className = 'result-bar-wrapper';
-            
-            barWrapper.innerHTML = `
-                <div class="label-text">
-                    <span>${p.className}</span>
-                    <span>${percent}%</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 0%"></div>
-                </div>
-            `;
-            
-            labelContainer.appendChild(barWrapper);
-            
-            // Animation
-            setTimeout(() => {
-                barWrapper.querySelector('.progress-bar').style.width = percent + '%';
-            }, 100);
-        });
-
+        labelContainer.innerHTML = ''; // Clear for static prediction
+        await updateResults(prediction);
         predictBtn.disabled = false;
         predictBtn.textContent = '다시 분석하기';
+    });
+
+    // Webcam Mode Logic
+    webcamStartBtn.addEventListener('click', async () => {
+        webcamStartBtn.disabled = true;
+        webcamStartBtn.textContent = '카메라 연결 중...';
+        
+        await initModel();
+        
+        const flip = true;
+        webcam = new tmImage.Webcam(400, 400, flip);
+        await webcam.setup();
+        await webcam.play();
+        
+        webcamStartBtn.style.display = 'none';
+        document.getElementById("webcam-container").appendChild(webcam.canvas);
+        
+        window.requestAnimationFrame(loop);
     });
 });

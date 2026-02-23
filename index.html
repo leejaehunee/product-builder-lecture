@@ -4,6 +4,9 @@
 
 
 
+
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -29,7 +32,13 @@
             <p class="subtitle">AI가 분석하는 나의 닮은 동물상</p>
         </header>
 
-        <section class="upload-section">
+        <div class="test-mode-toggle">
+            <button id="upload-mode-btn" class="mode-btn active">사진 업로드</button>
+            <button id="webcam-mode-btn" class="mode-btn">실시간 웹캠</button>
+        </div>
+
+        <!-- Image Upload Section -->
+        <section id="upload-section" class="test-section">
             <div id="image-container">
                 <img id="face-image" src="" alt="your image" style="display:none;" />
                 <div id="upload-label">
@@ -39,6 +48,12 @@
             </div>
             <input type="file" id="image-upload" accept="image/*" style="display:none;" />
             <button id="predict-btn" class="main-btn">분석 시작하기</button>
+        </section>
+
+        <!-- Webcam Section -->
+        <section id="webcam-section" class="test-section" style="display:none;">
+            <div id="webcam-container"></div>
+            <button id="webcam-start-btn" class="main-btn">카메라 시작하기</button>
         </section>
 
         <section id="result-section" style="display:none;">
